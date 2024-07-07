@@ -3,12 +3,14 @@ import 'dart:async';
 
 class TypewriterHintText extends StatefulWidget {
   final List<String> searchQueries;
+  final String? hintTextPrefix;  
   final Duration typeSpeed;
   final Duration backspaceSpeed;
   final Duration delay;
 
   TypewriterHintText({
     required this.searchQueries,
+    this.hintTextPrefix,  
     this.typeSpeed = const Duration(milliseconds: 150),
     this.backspaceSpeed = const Duration(milliseconds: 100),
     this.delay = const Duration(seconds: 1),
@@ -34,7 +36,7 @@ class _TypewriterHintTextState extends State<TypewriterHintText> {
   void _startTypewriterEffect() {
     _timer = Timer.periodic(
       _isTyping ? widget.typeSpeed : widget.backspaceSpeed,
-          (timer) {
+      (timer) {
         setState(() {
           if (_isTyping) {
             if (_currentQuery.length < widget.searchQueries[_queryIndex].length) {
@@ -75,7 +77,9 @@ class _TypewriterHintTextState extends State<TypewriterHintText> {
     return TextFormField(
       controller: _controller,
       decoration: InputDecoration(
-        hintText: 'Search for $_currentQuery',
+        hintText: widget.hintTextPrefix != null 
+            ? '${widget.hintTextPrefix} $_currentQuery' 
+            : _currentQuery,
         hintStyle: const TextStyle(color: Colors.grey),
       ),
     );
